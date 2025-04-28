@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Fitness Program Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slideIn { animation: slideIn 0.5s ease-out; }
+        .progress-bar { transition: width 0.3s ease-in-out; }
+        input:invalid:focus { border-color: #f87171; }
+        input:valid { border-color: #4ade80; }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl m-4 animate-slideIn">
+        <h1 class="text-3xl font-extrabold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">Join Our Fitness Program</h1>
+        <!-- Progress Bar -->
+        <div class="mb-6">
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-gradient-to-r from-green-400 to-blue-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+            </div>
+            <p class="text-sm text-gray-600 mt-2 text-center">Progress: <span id="progressText">0%</span></p>
+        </div>
+        <form id="clientForm" class="space-y-8">
+            <!-- Personal Information -->
+            <div class="border-l-4 border-purple-500 pl-4">
+                <h2 class="text-xl font-semibold mb-4 text-purple-700">Personal Information</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fullName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300" oninput="updateProgress()">
+                        <p class="text-red-500 text-xs mt-1 hidden" id="fullNameError">Please enter your full name.</p>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="email" name="email" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300" oninput="updateProgress()">
+                        <p class="text-red-500 text-xs mt-1 hidden" id="emailError">Please enter a valid email.</p>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300" oninput="updateProgress()">
+                    </div>
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
+                        <input type="number" id="age" name="age" min="18" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-300" oninput="updateProgress()">
+                        <p class="text-red-500 text-xs mt-1 hidden" id="ageError">Please enter an age of 18 or older.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Physical Information -->
+            <div class="border-l-4 border-blue-500 pl-4">
+                <h2 class="text-xl font-semibold mb-4 text-blue-700">Physical Information</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label for="height" class="block text-sm font-medium text-gray-700">Height (cm)</label>
+                        <input type="number" id="height" name="height" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300" oninput="updateProgress()">
+                        <p class="text-red-500 text-xs mt-1 hidden" id="heightError">Please enter your height.</p>
+                    </div>
+                    <div>
+                        <label for="weight" class="block text-sm font-medium text-gray-700">Current Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300" oninput="updateProgress()">
+                        <p class="text-red-500 text-xs mt-1 hidden" id="weightError">Please enter your weight.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fitness Goals -->
+            <div class="border-l-4 border-green-500 pl-4">
+                <h2 class="text-xl font-semibold mb-4 text-green-700">Fitness Goals</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="goal" class="block text-sm font-medium text-gray-700">Primary Goal</label>
+                        <select id="goal" name="goal" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300" onchange="updateProgress()">
+                            <option value="">Select Goal</option>
+                            <option value="weight_loss">Weight Loss</option>
+                            <option value="weight_gain">Weight Gain</option>
+                            <option value="maintain">Maintain Weight</option>
+                        </select>
+                        <p class="text-red-500 text-xs mt-1 hidden" id="goalError">Please select a goal.</p>
+                    </div>
+                    <div>
+                        <label for="targetWeight" class="block text-sm font-medium text-gray-700">Target Weight (kg)</label>
+                        <input type="number" id="targetWeight" name="targetWeight" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300" oninput="updateProgress()">
+                    </div>
+                    <div>
+                        <label for="activityLevel" class="block text-sm font-medium text-gray-700">Current Activity Level</label>
+                        <select id="activityLevel" name="activityLevel" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-300" onclick="updateProgress()">
+                            <option value="">Select Activity Level</option>
+                            <option value="sedentary">Sedentary (little or no exercise)</option>
+                            <option value="light">Light (exercise 1-3 times/week)</option>
+                            <option value="moderate">Moderate (exercise 3-5 times/week)</option>
+                            <option value="active">Active (exercise 6-7 times/week)</option>
+                        </select>
+                        <p class="text-red-500 text-xs mt-1 hidden" id="activityLevelError">Please select an activity level.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Information -->
+            <div class="border-l-4 border-yellow-500 pl-4">
+                <h2 class="text-xl font-semibold mb-4 text-yellow-700">Health Information</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="medicalConditions" class="block text-sm font-medium text-gray-700">Medical Conditions (if any)</label>
+                        <textarea id="medicalConditions" name="medicalConditions" rows="4" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300" oninput="updateProgress()"></textarea>
+                    </div>
+                    <div>
+                        <label for="medications" class="block text-sm font-medium text-gray-700">Current Medications (if any)</label>
+                        <textarea id="medications" name="medications" rows="4" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition duration-300" oninput="updateProgress()"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dietary Preferences -->
+            <div class="border-l-4 border-pink-500 pl-4">
+                <h2 class="text-xl font-semibold mb-4 text-pink-700">Dietary Preferences</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="dietType" class="block text-sm font-medium text-gray-700">Dietary Preference</label>
+                        <select id="dietType" name="dietType" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition duration-300" onchange="updateProgress()">
+                            <option value="">Select Preference</option>
+                            <option value="none">No Specific Preference</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="keto">Keto</option>
+                            <option value="paleo">Paleo</option>
+                            <option value="gluten_free">Gluten-Free</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="foodAllergies" class="block text-sm font-medium text-gray-700">Food Allergies (if any)</label>
+                        <textarea id="foodAllergies" name="foodAllergies" rows="4" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition duration-300" oninput="updateProgress()"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission -->
+            <div class="text-center">
+                <button type="submit" class="inline-flex justify-center py-3 px-6 border border-transparent shadow-md text-base font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-4 focus:ring-purple-300 transition duration-300 transform hover:scale-105">Submit</button>
+            </div>
+        </form>
+        <p id="formMessage" class="mt-6 text-center text-base font-medium text-gray-800"></p>
+    </div>
+
+    <script>
+        const requiredFields = ['fullName', 'email', 'age', 'height', 'weight', 'goal', 'activityLevel'];
+        const totalFields = document.querySelectorAll('input, select, textarea').length;
+
+        function updateProgress() {
+            const filledRequired = requiredFields.reduce((count, id) => {
+                const field = document.getElementById(id);
+                return count + (field.value.trim() !== '' ? 1 : 0);
+            }, 0);
+            const progress = Math.round((filledRequired / requiredFields.length) * 100);
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').textContent = `${progress}%`;
+        }
+
+        function validateField(field) {
+            const errorElement = document.getElementById(`${field.id}Error`);
+            if (field.required && !field.value.trim()) {
+                errorElement.classList.remove('hidden');
+                return false;
+            } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+                errorElement.classList.remove('hidden');
+                return false;
+            } else if (field.id === 'age' && (field.value < 18 || isNaN(field.value))) {
+                errorElement.classList.remove('hidden');
+                return false;
+            } else {
+                errorElement.classList.add('hidden');
+                return true;
+            }
+        }
+
+        document.querySelectorAll('input, select').forEach(field => {
+            field.addEventListener('input', () => validateField(field));
+            field.addEventListener('change', () => validateField(field));
+        });
+
+        document.getElementById('clientForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let isValid = true;
+            requiredFields.forEach(id => {
+                if (!validateField(document.getElementById(id))) {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                console.log('Form Data:', data); // Replace with actual submission logic
+                document.getElementById('formMessage').textContent = 'Thank you for registering! We will contact you soon.';
+                document.getElementById('formMessage').classList.add('text-green-600');
+                this.reset();
+                document.getElementById('progressBar').style.width = '0%';
+                document.getElementById('progressText').textContent = '0%';
+            } else {
+                document.getElementById('formMessage').textContent = 'Please fill out all required fields correctly.';
+                document.getElementById('formMessage').classList.add('text-red-600');
+            }
+        });
+    </script>
+</body>
+</html>
